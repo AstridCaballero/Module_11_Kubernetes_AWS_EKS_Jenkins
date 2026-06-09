@@ -25,6 +25,7 @@ pipeline {
             steps {
                 script {
                    echo 'deploying docker image...'
+                   sh 'echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID'
                    sh 'kubectl create deployment nginx-deployment --image=nginx'
                 }
             }
