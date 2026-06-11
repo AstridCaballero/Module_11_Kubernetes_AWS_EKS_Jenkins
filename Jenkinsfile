@@ -3,7 +3,7 @@
 pipeline {
     agent any
     tools {
-        maven 'Maven'
+        maven 'maven-3.9'
     }
     environment {
         DOCKER_REPO_SERVER = 'docker.io'
