@@ -5,6 +5,10 @@ pipeline {
     tools {
         maven 'Maven'
     }
+    environment {
+        DOCKER_REPO_SERVER = 'docker.io'
+        DOCKER_REPO = 'cabfish00/demo-app'
+   }
     stages {
         stage('increment version') {
             steps {
@@ -40,20 +44,27 @@ pipeline {
             }
         }
         stage('deploy') {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws_secret_access_key')
+                APP_NAME = 'java-maven-app'
+            }
             steps {
                 script {
                    echo 'deploying docker image...'
+                   sh 'envsubst < kubernetes/deployment.yaml | kubectl apply -f -'
+                   sh 'envsubst < kubernetes/service.yaml | kubectl apply -f -'
                 }
             }
         }
         stage('commit version update'){
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'gitlab-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-                        sh "git remote set-url origin https://${USER}:${PASS}@gitlab.com/twn-devops-bootcamp/latest/11-eks/java-maven-app.git"
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+                        sh "git remote set-url origin https://${USER}:${PASS}@github.com/AstridCaballero/Module_11_Kubernetes_AWS_EKS_Jenkins.git"
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:jenkins-jobs'
+                        sh 'git push origin HEAD:Module_11/EKS_Full_CI_CD_chapter-9'
                     }
                 }
             }
