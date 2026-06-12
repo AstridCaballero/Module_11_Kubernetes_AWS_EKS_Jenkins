@@ -64,7 +64,7 @@ pipeline {
                         sh "git remote set-url origin https://${USER}:${PASS}@github.com/AstridCaballero/Module_11_Kubernetes_AWS_EKS_Jenkins.git"
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:Module_11/EKS_ECS_Full_CI_CD_chapter-10'
+                        sh 'git push origin HEAD:Module_11/EKS_ECR_Full_CI_CD_chapter-10'
                     }
                 }
             }
